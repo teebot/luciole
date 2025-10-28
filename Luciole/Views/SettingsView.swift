@@ -277,80 +277,122 @@ struct MusicSearchView: View {
     @State private var searchText = ""
     @State private var searchResults: [Playlist] = []
     @State private var isSearching = false
+    @State private var authorizationStatus: MusicAuthorization.Status = .notDetermined
+    @State private var errorMessage: String?
 
     var body: some View {
         NavigationView {
             VStack {
-                // Search Bar
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundColor(.gray)
-                        .font(.system(size: 24))
+                // Authorization check
+                if authorizationStatus != .authorized {
+                    VStack(spacing: 20) {
+                        Image(systemName: "music.note.list")
+                            .font(.system(size: 60))
+                            .foregroundColor(.pink)
 
-                    TextField("Chercher une playlist", text: $searchText)
-                        .font(.system(size: 24))
-                        .textFieldStyle(PlainTextFieldStyle())
-                        .onSubmit {
-                            searchPlaylists()
-                        }
+                        Text("Accès Apple Music requis")
+                            .font(.system(size: 24, weight: .semibold))
 
-                    if !searchText.isEmpty {
+                        Text("Autorisez l'accès à Apple Music pour rechercher des playlists")
+                            .font(.system(size: 18))
+                            .foregroundColor(.gray)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+
                         Button(action: {
-                            searchText = ""
-                            searchResults = []
+                            requestAuthorization()
                         }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.gray)
-                                .font(.system(size: 24))
+                            Text("Autoriser")
+                                .font(.system(size: 22, weight: .medium))
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: 300)
+                                .background(Color.pink)
+                                .cornerRadius(15)
                         }
                     }
-                }
-                .padding()
-                .background(Color.gray.opacity(0.1))
-                .cornerRadius(15)
-                .padding()
-
-                // Results
-                if isSearching {
-                    ProgressView()
-                        .scaleEffect(1.5)
-                        .padding()
-                } else if searchResults.isEmpty && !searchText.isEmpty {
-                    Text("Aucune playlist trouvée")
-                        .font(.system(size: 22))
-                        .foregroundColor(.gray)
-                        .padding()
+                    .padding()
                 } else {
-                    List(searchResults, id: \.id) { playlist in
-                        Button(action: {
-                            selectedPlaylistId = playlist.id.rawValue
-                            dismiss()
-                        }) {
-                            HStack {
-                                if let artwork = playlist.artwork {
-                                    ArtworkImage(artwork, width: 60, height: 60)
-                                        .cornerRadius(10)
-                                }
+                    // Search Bar
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 24))
 
-                                VStack(alignment: .leading) {
-                                    Text(playlist.name)
-                                        .font(.system(size: 20, weight: .medium))
-                                        .foregroundColor(.black)
+                        TextField("Chercher une playlist", text: $searchText)
+                            .font(.system(size: 24))
+                            .textFieldStyle(PlainTextFieldStyle())
+                            .onSubmit {
+                                searchPlaylists()
+                            }
 
-                                    if let curatorName = playlist.curatorName {
-                                        Text(curatorName)
-                                            .font(.system(size: 16))
-                                            .foregroundColor(.gray)
+                        if !searchText.isEmpty {
+                            Button(action: {
+                                searchText = ""
+                                searchResults = []
+                                errorMessage = nil
+                            }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(.gray)
+                                    .font(.system(size: 24))
+                            }
+                        }
+                    }
+                    .padding()
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(15)
+                    .padding()
+
+                    // Error message
+                    if let error = errorMessage {
+                        Text(error)
+                            .font(.system(size: 18))
+                            .foregroundColor(.red)
+                            .padding()
+                    }
+
+                    // Results
+                    if isSearching {
+                        ProgressView()
+                            .scaleEffect(1.5)
+                            .padding()
+                    } else if searchResults.isEmpty && !searchText.isEmpty && errorMessage == nil {
+                        Text("Aucune playlist trouvée")
+                            .font(.system(size: 22))
+                            .foregroundColor(.gray)
+                            .padding()
+                    } else {
+                        List(searchResults, id: \.id) { playlist in
+                            Button(action: {
+                                selectedPlaylistId = playlist.id.rawValue
+                                dismiss()
+                            }) {
+                                HStack {
+                                    if let artwork = playlist.artwork {
+                                        ArtworkImage(artwork, width: 60, height: 60)
+                                            .cornerRadius(10)
+                                    }
+
+                                    VStack(alignment: .leading) {
+                                        Text(playlist.name)
+                                            .font(.system(size: 20, weight: .medium))
+                                            .foregroundColor(.black)
+
+                                        if let curatorName = playlist.curatorName {
+                                            Text(curatorName)
+                                                .font(.system(size: 16))
+                                                .foregroundColor(.gray)
+                                        }
                                     }
                                 }
+                                .padding(.vertical, 5)
                             }
-                            .padding(.vertical, 5)
                         }
+                        .listStyle(PlainListStyle())
                     }
-                    .listStyle(PlainListStyle())
-                }
 
-                Spacer()
+                    Spacer()
+                }
             }
             .navigationTitle("Playlists")
             .navigationBarTitleDisplayMode(.inline)
@@ -363,27 +405,102 @@ struct MusicSearchView: View {
                 }
             }
         }
+        .onAppear {
+            checkAuthorization()
+        }
+    }
+
+    private func checkAuthorization() {
+        authorizationStatus = MusicAuthorization.currentStatus
+        print("🎵 MusicKit authorization status: \(authorizationStatus)")
+    }
+
+    private func requestAuthorization() {
+        Task {
+            let status = await MusicAuthorization.request()
+            await MainActor.run {
+                authorizationStatus = status
+                print("🎵 MusicKit authorization updated: \(status)")
+            }
+        }
     }
 
     private func searchPlaylists() {
         guard !searchText.isEmpty else { return }
 
+        print("🔍 Searching for playlists: \(searchText)")
         isSearching = true
+        errorMessage = nil
 
         Task {
             do {
+                // Check authorization before searching
+                let status = MusicAuthorization.currentStatus
+                print("🔍 Authorization status: \(status)")
+
+                guard status == .authorized else {
+                    print("❌ Not authorized to search: \(status)")
+                    await MainActor.run {
+                        errorMessage = "Accès Apple Music non autorisé"
+                        isSearching = false
+                    }
+                    return
+                }
+
+                // Check for Apple Music subscription
+                let subscriptionStatus = MusicSubscription.current
+                print("🔍 Subscription status: \(subscriptionStatus)")
+
                 var request = MusicCatalogSearchRequest(term: searchText, types: [Playlist.self])
                 request.limit = 25
 
+                print("🔍 Making search request for term: '\(searchText)'")
                 let response = try await request.response()
+
+                print("✅ Search complete: \(response.playlists.count) playlists found")
 
                 await MainActor.run {
                     searchResults = response.playlists.map { $0 }
                     isSearching = false
+
+                    if searchResults.isEmpty {
+                        print("⚠️ No results for: \(searchText)")
+                    }
+                }
+            } catch let error as NSError {
+                print("❌ Search error: \(error)")
+                print("❌ Error domain: \(error.domain)")
+                print("❌ Error code: \(error.code)")
+                print("❌ Error userInfo: \(error.userInfo)")
+                print("❌ Error description: \(error.localizedDescription)")
+
+                var friendlyMessage = "Erreur de recherche"
+
+                // Provide more specific error messages
+                if error.domain == "SKErrorDomain" {
+                    switch error.code {
+                    case 3: // Network unavailable
+                        friendlyMessage = "Pas de connexion internet"
+                    case 5: // Not entitled (no subscription)
+                        friendlyMessage = "Abonnement Apple Music requis"
+                    default:
+                        friendlyMessage = "Erreur Apple Music (code \(error.code))"
+                    }
+                } else if error.domain == NSURLErrorDomain {
+                    friendlyMessage = "Erreur réseau"
+                } else {
+                    friendlyMessage = "Erreur: \(error.localizedDescription)"
+                }
+
+                await MainActor.run {
+                    errorMessage = friendlyMessage
+                    isSearching = false
                 }
             } catch {
-                print("Search error: \(error)")
+                print("❌ Unknown search error: \(error)")
+                print("❌ Error type: \(type(of: error))")
                 await MainActor.run {
+                    errorMessage = "Erreur inconnue: \(error.localizedDescription)"
                     isSearching = false
                 }
             }
