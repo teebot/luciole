@@ -1,0 +1,383 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 63;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2BA9519C06B9D9AA65799D95 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8947AEE053011FB0585FDBED /* ContentView.swift */; };
+		55E2CC2D2622CD28D65ED1E6 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAAAB0FF37611A4901DA4EC8 /* AppSettings.swift */; };
+		5ED27765F0DF1F3384AB6690 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232999D02839631D12231756 /* SettingsView.swift */; };
+		729E0AD649516951384132C4 /* PhotoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F980944862DE9C46773E96 /* PhotoManager.swift */; };
+		8A970FF5824C07E595ED86F5 /* MusicPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CD0A83845F1E0BEEE5E0E2 /* MusicPlayerView.swift */; };
+		8E22E361F92CE1855B433195 /* LucioleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB0060DC9C7EAC55D0EBADB /* LucioleApp.swift */; };
+		98DA2C3EE0189B546639BB12 /* MusicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E21FBC6CB4833C538C5FC5F3 /* MusicManager.swift */; };
+		AC9FC3F3C516565095937B6D /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EEE97A62C3C03CEB1EDC8DD /* HomeView.swift */; };
+		E31E3873900B307435BD6F0E /* PhotoSlideshowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7CCFC82905E60C141895BDF /* PhotoSlideshowView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		03CD0A83845F1E0BEEE5E0E2 /* MusicPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerView.swift; sourceTree = "<group>"; };
+		0C55CA2ED5EA319094453131 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		232999D02839631D12231756 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		28F980944862DE9C46773E96 /* PhotoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoManager.swift; sourceTree = "<group>"; };
+		4EEE97A62C3C03CEB1EDC8DD /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		6ABB13440D862C74883777EC /* Luciole.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Luciole.entitlements; sourceTree = "<group>"; };
+		7FB0060DC9C7EAC55D0EBADB /* LucioleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LucioleApp.swift; sourceTree = "<group>"; };
+		8947AEE053011FB0585FDBED /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A7CCFC82905E60C141895BDF /* PhotoSlideshowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSlideshowView.swift; sourceTree = "<group>"; };
+		C7C3F3A8F166BBFC38100013 /* Luciole.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Luciole.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CAAAB0FF37611A4901DA4EC8 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		E21FBC6CB4833C538C5FC5F3 /* MusicManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicManager.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		1B0574D9653E4AC3FE4AAE1E /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				E21FBC6CB4833C538C5FC5F3 /* MusicManager.swift */,
+				28F980944862DE9C46773E96 /* PhotoManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		1EB58865E0D0212183C990F7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C7C3F3A8F166BBFC38100013 /* Luciole.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		23AC96E5E63CD243FFF017A5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CAAAB0FF37611A4901DA4EC8 /* AppSettings.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		5920E344C311BFFB08C33524 /* Luciole */ = {
+			isa = PBXGroup;
+			children = (
+				8947AEE053011FB0585FDBED /* ContentView.swift */,
+				0C55CA2ED5EA319094453131 /* Info.plist */,
+				6ABB13440D862C74883777EC /* Luciole.entitlements */,
+				7FB0060DC9C7EAC55D0EBADB /* LucioleApp.swift */,
+				1B0574D9653E4AC3FE4AAE1E /* Managers */,
+				23AC96E5E63CD243FFF017A5 /* Models */,
+				A3650B9594D0A10F0B140299 /* Views */,
+			);
+			path = Luciole;
+			sourceTree = "<group>";
+		};
+		9A463531392D7141BA4525A6 = {
+			isa = PBXGroup;
+			children = (
+				5920E344C311BFFB08C33524 /* Luciole */,
+				1EB58865E0D0212183C990F7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A3650B9594D0A10F0B140299 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4EEE97A62C3C03CEB1EDC8DD /* HomeView.swift */,
+				03CD0A83845F1E0BEEE5E0E2 /* MusicPlayerView.swift */,
+				A7CCFC82905E60C141895BDF /* PhotoSlideshowView.swift */,
+				232999D02839631D12231756 /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7BA3DA63B9447E8DC861D9F7 /* Luciole */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C17EB846DB92A0462D58FEA2 /* Build configuration list for PBXNativeTarget "Luciole" */;
+			buildPhases = (
+				2124647EBF44E3157621EFD4 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Luciole;
+			packageProductDependencies = (
+			);
+			productName = Luciole;
+			productReference = C7C3F3A8F166BBFC38100013 /* Luciole.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2CDD1CEC512E276A4640F7CC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2600;
+			};
+			buildConfigurationList = 8BCD8F1D7636AE192B872F23 /* Build configuration list for PBXProject "Luciole" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 9A463531392D7141BA4525A6;
+			minimizedProjectReferenceProxies = 1;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7BA3DA63B9447E8DC861D9F7 /* Luciole */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2124647EBF44E3157621EFD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				55E2CC2D2622CD28D65ED1E6 /* AppSettings.swift in Sources */,
+				2BA9519C06B9D9AA65799D95 /* ContentView.swift in Sources */,
+				AC9FC3F3C516565095937B6D /* HomeView.swift in Sources */,
+				8E22E361F92CE1855B433195 /* LucioleApp.swift in Sources */,
+				98DA2C3EE0189B546639BB12 /* MusicManager.swift in Sources */,
+				8A970FF5824C07E595ED86F5 /* MusicPlayerView.swift in Sources */,
+				729E0AD649516951384132C4 /* PhotoManager.swift in Sources */,
+				E31E3873900B307435BD6F0E /* PhotoSlideshowView.swift in Sources */,
+				5ED27765F0DF1F3384AB6690 /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		41DEC6FAB1284D4FAD86DC01 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Luciole/Luciole.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9BYPXMHK3P;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = Luciole/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cozypixel.luciole;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Release;
+		};
+		61025A547337ADB3F533F8C8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = Luciole/Luciole.entitlements;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Luciole/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Luciole;
+				PRODUCT_NAME = Luciole;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		C8090F9FB49406D60A0B5ADD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = Luciole/Luciole.entitlements;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Luciole/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.Luciole;
+				PRODUCT_NAME = Luciole;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Release;
+		};
+		E67E98F8245C2546B5DAA817 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Luciole/Luciole.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9BYPXMHK3P;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = Luciole/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.cozypixel.luciole;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8BCD8F1D7636AE192B872F23 /* Build configuration list for PBXProject "Luciole" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				61025A547337ADB3F533F8C8 /* Debug */,
+				C8090F9FB49406D60A0B5ADD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C17EB846DB92A0462D58FEA2 /* Build configuration list for PBXNativeTarget "Luciole" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E67E98F8245C2546B5DAA817 /* Debug */,
+				41DEC6FAB1284D4FAD86DC01 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2CDD1CEC512E276A4640F7CC /* Project object */;
+}
