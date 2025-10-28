@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2BA9519C06B9D9AA65799D95 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8947AEE053011FB0585FDBED /* ContentView.swift */; };
+		2D0CB8256031BEE6BC73E739 /* SystemVolumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB97294C4CCF6848B166E4 /* SystemVolumeView.swift */; };
 		55E2CC2D2622CD28D65ED1E6 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAAAB0FF37611A4901DA4EC8 /* AppSettings.swift */; };
 		5ED27765F0DF1F3384AB6690 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232999D02839631D12231756 /* SettingsView.swift */; };
 		6F3BA2A798CA19E1C54A6789 /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE28DD138ACAA22CFAA366FC /* WeatherManager.swift */; };
@@ -21,6 +22,7 @@
 
 /* Begin PBXFileReference section */
 		03CD0A83845F1E0BEEE5E0E2 /* MusicPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerView.swift; sourceTree = "<group>"; };
+		04FB97294C4CCF6848B166E4 /* SystemVolumeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemVolumeView.swift; sourceTree = "<group>"; };
 		0C55CA2ED5EA319094453131 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		232999D02839631D12231756 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		28F980944862DE9C46773E96 /* PhotoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoManager.swift; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 				03CD0A83845F1E0BEEE5E0E2 /* MusicPlayerView.swift */,
 				A7CCFC82905E60C141895BDF /* PhotoSlideshowView.swift */,
 				232999D02839631D12231756 /* SettingsView.swift */,
+				04FB97294C4CCF6848B166E4 /* SystemVolumeView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -156,6 +159,7 @@
 				729E0AD649516951384132C4 /* PhotoManager.swift in Sources */,
 				E31E3873900B307435BD6F0E /* PhotoSlideshowView.swift in Sources */,
 				5ED27765F0DF1F3384AB6690 /* SettingsView.swift in Sources */,
+				2D0CB8256031BEE6BC73E739 /* SystemVolumeView.swift in Sources */,
 				6F3BA2A798CA19E1C54A6789 /* WeatherManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

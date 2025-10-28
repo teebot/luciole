@@ -171,18 +171,4 @@ class MusicManager: ObservableObject {
         // Get initial volume
         volume = AVAudioSession.sharedInstance().outputVolume
     }
-
-    func increaseVolume() {
-        let volumeView = MPVolumeView()
-        if let slider = volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider {
-            slider.value = min(slider.value + 0.1, 1.0)
-        }
-    }
-
-    func decreaseVolume() {
-        let volumeView = MPVolumeView()
-        if let slider = volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider {
-            slider.value = max(slider.value - 0.1, 0.0)
-        }
-    }
 }

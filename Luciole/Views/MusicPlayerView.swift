@@ -12,6 +12,7 @@ struct MusicPlayerView: View {
     @Binding var currentScreen: AppScreen
     @EnvironmentObject var appSettings: AppSettings
     @StateObject private var musicManager = MusicManager.shared
+    @StateObject private var volumeController = VolumeController()
 
     var body: some View {
         GeometryReader { geometry in
@@ -101,17 +102,23 @@ struct MusicPlayerView: View {
                     // Volume Controls
                     HStack(spacing: volumeSpacing) {
                         VolumeButton(icon: "speaker.minus.fill", isLandscape: isLandscape) {
-                            musicManager.decreaseVolume()
+                            volumeController.decreaseVolume()
                         }
 
                         VolumeButton(icon: "speaker.plus.fill", isLandscape: isLandscape) {
-                            musicManager.increaseVolume()
+                            volumeController.increaseVolume()
                         }
                     }
                     .padding(.bottom, bottomPadding)
 
                     Spacer()
                 }
+
+                // Hidden volume view (required for volume control to work)
+                SystemVolumeView()
+                    .frame(width: 1, height: 1)
+                    .opacity(0.01)
+                    .allowsHitTesting(false)
 
                 // Back Button
                 VStack {
