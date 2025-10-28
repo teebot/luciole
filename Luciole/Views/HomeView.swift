@@ -12,8 +12,10 @@ import MusicKit
 struct HomeView: View {
     @Binding var currentScreen: AppScreen
     @EnvironmentObject var appSettings: AppSettings
+    @StateObject private var weatherManager = WeatherManager()
     @State private var photoThumbnail: UIImage?
     @State private var showingSettings = false
+    @State private var currentTime = ""
 
     var body: some View {
         ZStack {
@@ -21,11 +23,38 @@ struct HomeView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 60) {
+                // Time and Weather Header
+                HStack(alignment: .top) {
+                    // Time in upper left
+                    Text(currentTime)
+                        .font(.system(size: 56, weight: .medium, design: .rounded))
+                        .foregroundColor(.black.opacity(0.8))
+                        .padding(.leading, 40)
+                        .padding(.top, 40)
+
+                    Spacer()
+
+                    // Weather in upper right
+                    HStack(spacing: 12) {
+                        Image(systemName: weatherManager.weatherSymbol)
+                            .font(.system(size: 48))
+                            .foregroundColor(.black.opacity(0.8))
+
+                        Text(weatherManager.temperature)
+                            .font(.system(size: 56, weight: .medium, design: .rounded))
+                            .foregroundColor(.black.opacity(0.8))
+                    }
+                    .padding(.trailing, 40)
+                    .padding(.top, 40)
+                }
+
                 // App Title
-                Text("Luciole")
+                Text(appSettings.appTitle)
                     .font(.system(size: 72, weight: .bold, design: .rounded))
                     .foregroundColor(.black)
-                    .padding(.top, 80)
+                    .padding(.top, 0)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
 
                 Spacer()
 
@@ -70,6 +99,21 @@ struct HomeView: View {
         }
         .onAppear {
             loadPhotoThumbnail()
+            updateTime()
+            startTimeTimer()
+            // Weather will be fetched automatically when location is received
+        }
+    }
+
+    private func updateTime() {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        currentTime = formatter.string(from: Date())
+    }
+
+    private func startTimeTimer() {
+        Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
+            updateTime()
         }
     }
 

@@ -30,6 +30,37 @@ struct SettingsView: View {
                             .font(.system(size: 48, weight: .bold))
                             .padding(.top, 40)
 
+                        // App Title Section
+                        VStack(alignment: .leading, spacing: 20) {
+                            Label {
+                                Text("Titre de l'application")
+                                    .font(.system(size: 28, weight: .semibold))
+                            } icon: {
+                                Image(systemName: "textformat")
+                                    .font(.system(size: 28))
+                                    .foregroundColor(.purple)
+                            }
+
+                            TextField("Nom de l'application", text: $appSettings.appTitle)
+                                .font(.system(size: 24))
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .padding(.horizontal)
+                                .onChange(of: appSettings.appTitle) { newValue in
+                                    // Limit to 16 characters
+                                    if newValue.count > 16 {
+                                        appSettings.appTitle = String(newValue.prefix(16))
+                                    }
+                                }
+
+                            Text("\(appSettings.appTitle.count)/16 caractères")
+                                .font(.system(size: 18))
+                                .foregroundColor(.gray)
+                                .padding(.horizontal)
+                        }
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(20)
+
                         // Photo Album Section
                         VStack(alignment: .leading, spacing: 20) {
                             Label {

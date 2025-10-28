@@ -22,6 +22,8 @@
 	<string>1</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Luciole a besoin d'accéder à Apple Music pour lire vos playlists.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Luciole a besoin d'accéder à votre position pour afficher la météo actuelle.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Luciole a besoin d'accéder à vos photos pour afficher les albums photo choisis.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
