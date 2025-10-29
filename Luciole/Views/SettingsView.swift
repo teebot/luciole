@@ -16,6 +16,7 @@ struct SettingsView: View {
     @State private var albums: [PHAssetCollection] = []
     @State private var userPlaylists: [Playlist] = []
     @State private var showingMusicSearch = false
+    @State private var showingAlbumSelection = false
 
     var body: some View {
         NavigationView {
@@ -73,20 +74,33 @@ struct SettingsView: View {
                             }
 
                             if photoManager.authorizationStatus == .authorized {
-                                if albums.isEmpty {
-                                    Text("Aucun album disponible")
-                                        .font(.system(size: 20))
-                                        .foregroundColor(.gray)
+                                Button(action: {
+                                    showingAlbumSelection = true
+                                }) {
+                                    Text("Sélectionner un album")
+                                        .font(.system(size: 24, weight: .medium))
+                                        .foregroundColor(.white)
                                         .padding()
-                                } else {
-                                    ForEach(albums, id: \.localIdentifier) { album in
-                                        AlbumRow(
-                                            album: album,
-                                            isSelected: appSettings.selectedPhotoAlbumId == album.localIdentifier
-                                        ) {
-                                            appSettings.selectedPhotoAlbumId = album.localIdentifier
+                                        .frame(maxWidth: .infinity)
+                                        .background(Color.blue)
+                                        .cornerRadius(15)
+                                }
+
+                                if !appSettings.selectedPhotoAlbumId.isEmpty,
+                                   let selectedAlbum = albums.first(where: { $0.localIdentifier == appSettings.selectedPhotoAlbumId }) {
+                                    HStack {
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text("✓ \(selectedAlbum.localizedTitle ?? "Album")")
+                                                .font(.system(size: 20, weight: .medium))
+                                                .foregroundColor(.green)
+
+                                            Text("\(photoManager.getPhotoCount(for: selectedAlbum)) photo(s)")
+                                                .font(.system(size: 16))
+                                                .foregroundColor(.gray)
                                         }
+                                        Spacer()
                                     }
+                                    .padding(.horizontal)
                                 }
                             } else {
                                 Button(action: {
@@ -216,6 +230,12 @@ struct SettingsView: View {
             }
             .sheet(isPresented: $showingMusicSearch) {
                 MusicSearchView(selectedPlaylistId: $appSettings.selectedPlaylistId)
+            }
+            .sheet(isPresented: $showingAlbumSelection) {
+                AlbumSelectionDialog(
+                    photoManager: photoManager,
+                    selectedAlbumId: $appSettings.selectedPhotoAlbumId
+                )
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())

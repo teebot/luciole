@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		19A81FAA0B6D93C8DE4D2D1B /* AlbumSelectionDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2EFE23CD529893CF0044286 /* AlbumSelectionDialog.swift */; };
 		2BA9519C06B9D9AA65799D95 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8947AEE053011FB0585FDBED /* ContentView.swift */; };
 		2D0CB8256031BEE6BC73E739 /* SystemVolumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FB97294C4CCF6848B166E4 /* SystemVolumeView.swift */; };
 		55E2CC2D2622CD28D65ED1E6 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAAAB0FF37611A4901DA4EC8 /* AppSettings.swift */; };
@@ -31,6 +32,7 @@
 		7FB0060DC9C7EAC55D0EBADB /* LucioleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LucioleApp.swift; sourceTree = "<group>"; };
 		8947AEE053011FB0585FDBED /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A7CCFC82905E60C141895BDF /* PhotoSlideshowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSlideshowView.swift; sourceTree = "<group>"; };
+		C2EFE23CD529893CF0044286 /* AlbumSelectionDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumSelectionDialog.swift; sourceTree = "<group>"; };
 		C7C3F3A8F166BBFC38100013 /* Luciole.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Luciole.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAAAB0FF37611A4901DA4EC8 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		DE28DD138ACAA22CFAA366FC /* WeatherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherManager.swift; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 		A3650B9594D0A10F0B140299 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				C2EFE23CD529893CF0044286 /* AlbumSelectionDialog.swift */,
 				4EEE97A62C3C03CEB1EDC8DD /* HomeView.swift */,
 				03CD0A83845F1E0BEEE5E0E2 /* MusicPlayerView.swift */,
 				A7CCFC82905E60C141895BDF /* PhotoSlideshowView.swift */,
@@ -150,6 +153,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19A81FAA0B6D93C8DE4D2D1B /* AlbumSelectionDialog.swift in Sources */,
 				55E2CC2D2622CD28D65ED1E6 /* AppSettings.swift in Sources */,
 				2BA9519C06B9D9AA65799D95 /* ContentView.swift in Sources */,
 				AC9FC3F3C516565095937B6D /* HomeView.swift in Sources */,

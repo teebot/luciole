@@ -68,6 +68,25 @@ class PhotoManager: ObservableObject {
     func fetchAllAlbums() -> [PHAssetCollection] {
         var albums: [PHAssetCollection] = []
 
+        // Built-in smart album subtypes to exclude
+        let excludedSmartAlbumSubtypes: [PHAssetCollectionSubtype] = [
+            .smartAlbumFavorites,
+            .smartAlbumRecentlyAdded,
+            .smartAlbumScreenshots,
+            .smartAlbumSelfPortraits,
+            .smartAlbumPanoramas,
+            .smartAlbumVideos,
+            .smartAlbumSlomoVideos,
+            .smartAlbumTimelapses,
+            .smartAlbumBursts,
+            .smartAlbumAllHidden,
+            .smartAlbumLivePhotos,
+            .smartAlbumDepthEffect,
+            .smartAlbumLongExposures,
+            .smartAlbumAnimated,
+            .smartAlbumUnableToUpload
+        ]
+
         // User albums
         let userAlbums = PHAssetCollection.fetchAssetCollections(
             with: .album,
@@ -78,16 +97,43 @@ class PhotoManager: ObservableObject {
             albums.append(collection)
         }
 
-        // Smart albums (like Favorites, Recents, etc.)
+        // Smart albums - only include user-created or non-standard ones
         let smartAlbums = PHAssetCollection.fetchAssetCollections(
             with: .smartAlbum,
             subtype: .any,
             options: nil
         )
         smartAlbums.enumerateObjects { collection, _, _ in
-            albums.append(collection)
+            // Filter out built-in smart albums
+            if !excludedSmartAlbumSubtypes.contains(collection.assetCollectionSubtype) {
+                albums.append(collection)
+            }
         }
 
-        return albums
+        // Sort by most recent photo date (descending)
+        return albums.sorted { album1, album2 in
+            let date1 = getLatestPhotoDate(for: album1)
+            let date2 = getLatestPhotoDate(for: album2)
+            return date1 > date2
+        }
+    }
+
+    func getLatestPhotoDate(for album: PHAssetCollection) -> Date {
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        fetchOptions.fetchLimit = 1
+
+        let assets = PHAsset.fetchAssets(in: album, options: fetchOptions)
+        if let latestAsset = assets.firstObject {
+            return latestAsset.creationDate ?? Date.distantPast
+        }
+        return Date.distantPast
+    }
+
+    func getPhotoCount(for album: PHAssetCollection) -> Int {
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
+        let assets = PHAsset.fetchAssets(in: album, options: fetchOptions)
+        return assets.count
     }
 }
