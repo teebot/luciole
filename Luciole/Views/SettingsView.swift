@@ -17,6 +17,8 @@ struct SettingsView: View {
     @State private var userPlaylists: [Playlist] = []
     @State private var showingMusicSearch = false
     @State private var showingAlbumSelection = false
+    @State private var selectedPlaylist: Playlist?
+    @State private var selectedAlbumPhotoCount: Int?
 
     var body: some View {
         NavigationView {
@@ -34,7 +36,7 @@ struct SettingsView: View {
                         // App Title Section
                         VStack(alignment: .leading, spacing: 20) {
                             Label {
-                                Text("Titre de l'application")
+                                Text("Message d'accueil")
                                     .font(.system(size: 28, weight: .semibold))
                             } icon: {
                                 Image(systemName: "textformat")
@@ -94,9 +96,15 @@ struct SettingsView: View {
                                                 .font(.system(size: 20, weight: .medium))
                                                 .foregroundColor(.green)
 
-                                            Text("\(photoManager.getPhotoCount(for: selectedAlbum)) photo(s)")
-                                                .font(.system(size: 16))
-                                                .foregroundColor(.gray)
+                                            if let count = selectedAlbumPhotoCount {
+                                                Text("\(count) photo\(count > 1 ? "s" : "")")
+                                                    .font(.system(size: 16))
+                                                    .foregroundColor(.gray)
+                                            } else {
+                                                Text("...")
+                                                    .font(.system(size: 16))
+                                                    .foregroundColor(.gray)
+                                            }
                                         }
                                         Spacer()
                                     }
@@ -161,7 +169,7 @@ struct SettingsView: View {
                             Button(action: {
                                 showingMusicSearch = true
                             }) {
-                                Text("Chercher une playlist")
+                                Text("Sélectionner une playlist")
                                     .font(.system(size: 24, weight: .medium))
                                     .foregroundColor(.white)
                                     .padding()
@@ -170,10 +178,22 @@ struct SettingsView: View {
                                     .cornerRadius(15)
                             }
 
-                            if !appSettings.selectedPlaylistId.isEmpty {
-                                Text("✓ Playlist configurée")
-                                    .font(.system(size: 20))
-                                    .foregroundColor(.green)
+                            if let playlist = selectedPlaylist {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("✓ \(playlist.name)")
+                                            .font(.system(size: 20, weight: .medium))
+                                            .foregroundColor(.green)
+
+                                        if let curatorName = playlist.curatorName {
+                                            Text(curatorName)
+                                                .font(.system(size: 16))
+                                                .foregroundColor(.gray)
+                                        }
+                                    }
+                                    Spacer()
+                                }
+                                .padding(.horizontal)
                             }
                         }
                         .padding()
@@ -240,7 +260,74 @@ struct SettingsView: View {
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .onAppear {
-            albums = photoManager.fetchAllAlbums()
+            loadSelectedAlbum()
+            loadSelectedPlaylist()
+        }
+        .onChange(of: appSettings.selectedPlaylistId) { _ in
+            loadSelectedPlaylist()
+        }
+        .onChange(of: appSettings.selectedPhotoAlbumId) { _ in
+            loadSelectedAlbum()
+        }
+    }
+
+    private func loadSelectedAlbum() {
+        guard !appSettings.selectedPhotoAlbumId.isEmpty else {
+            albums = []
+            selectedAlbumPhotoCount = nil
+            return
+        }
+
+        // Reset photo count while loading
+        selectedAlbumPhotoCount = nil
+
+        // Fetch only the selected album, not all albums
+        Task {
+            await MainActor.run {
+                if let album = PHAssetCollection.fetchAssetCollections(
+                    withLocalIdentifiers: [appSettings.selectedPhotoAlbumId],
+                    options: nil
+                ).firstObject {
+                    albums = [album]
+
+                    // Load photo count asynchronously
+                    let manager = photoManager
+                    Task.detached(priority: .utility) {
+                        let count = manager.getPhotoCount(for: album)
+                        await MainActor.run {
+                            selectedAlbumPhotoCount = count
+                        }
+                    }
+                } else {
+                    albums = []
+                }
+            }
+        }
+    }
+
+    private func loadSelectedPlaylist() {
+        guard !appSettings.selectedPlaylistId.isEmpty else {
+            selectedPlaylist = nil
+            return
+        }
+
+        Task {
+            do {
+                let status = MusicAuthorization.currentStatus
+                guard status == .authorized else { return }
+
+                // Fetch playlist by ID
+                let request = MusicLibraryRequest<Playlist>()
+                let response = try await request.response()
+
+                await MainActor.run {
+                    selectedPlaylist = response.items.first { playlist in
+                        playlist.id.rawValue == appSettings.selectedPlaylistId
+                    }
+                }
+            } catch {
+                print("Error loading selected playlist: \(error)")
+            }
         }
     }
 }
@@ -295,10 +382,29 @@ struct MusicSearchView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var selectedPlaylistId: String
     @State private var searchText = ""
-    @State private var searchResults: [Playlist] = []
-    @State private var isSearching = false
+    @State private var allPlaylists: [Playlist] = []
+    @State private var isLoading = false
     @State private var authorizationStatus: MusicAuthorization.Status = .notDetermined
     @State private var errorMessage: String?
+
+    var displayedPlaylists: [Playlist] {
+        // Sort by last modified date (most recent first)
+        let sortedPlaylists = allPlaylists.sorted { playlist1, playlist2 in
+            let date1 = playlist1.lastModifiedDate ?? Date.distantPast
+            let date2 = playlist2.lastModifiedDate ?? Date.distantPast
+            return date1 > date2
+        }
+
+        if searchText.isEmpty {
+            // Show only 10 most recent when not searching
+            return Array(sortedPlaylists.prefix(10))
+        } else {
+            // Show all matching playlists when searching (autocomplete)
+            return sortedPlaylists.filter { playlist in
+                playlist.name.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+    }
 
     var body: some View {
         NavigationView {
@@ -313,7 +419,7 @@ struct MusicSearchView: View {
                         Text("Accès Apple Music requis")
                             .font(.system(size: 24, weight: .semibold))
 
-                        Text("Autorisez l'accès à Apple Music pour rechercher des playlists")
+                        Text("Autorisez l'accès à Apple Music pour accéder à vos playlists")
                             .font(.system(size: 18))
                             .foregroundColor(.gray)
                             .multilineTextAlignment(.center)
@@ -339,18 +445,15 @@ struct MusicSearchView: View {
                             .foregroundColor(.gray)
                             .font(.system(size: 24))
 
-                        TextField("Chercher une playlist", text: $searchText)
+                        TextField("Rechercher une playlist", text: $searchText)
                             .font(.system(size: 24))
                             .textFieldStyle(PlainTextFieldStyle())
-                            .onSubmit {
-                                searchPlaylists()
-                            }
+                            .autocapitalization(.none)
+                            .disableAutocorrection(true)
 
                         if !searchText.isEmpty {
                             Button(action: {
                                 searchText = ""
-                                searchResults = []
-                                errorMessage = nil
                             }) {
                                 Image(systemName: "xmark.circle.fill")
                                     .foregroundColor(.gray)
@@ -372,17 +475,22 @@ struct MusicSearchView: View {
                     }
 
                     // Results
-                    if isSearching {
+                    if isLoading {
                         ProgressView()
                             .scaleEffect(1.5)
                             .padding()
-                    } else if searchResults.isEmpty && !searchText.isEmpty && errorMessage == nil {
+                    } else if allPlaylists.isEmpty && errorMessage == nil {
+                        Text("Aucune playlist dans votre bibliothèque")
+                            .font(.system(size: 22))
+                            .foregroundColor(.gray)
+                            .padding()
+                    } else if displayedPlaylists.isEmpty && !searchText.isEmpty {
                         Text("Aucune playlist trouvée")
                             .font(.system(size: 22))
                             .foregroundColor(.gray)
                             .padding()
                     } else {
-                        List(searchResults, id: \.id) { playlist in
+                        List(displayedPlaylists, id: \.id) { playlist in
                             Button(action: {
                                 selectedPlaylistId = playlist.id.rawValue
                                 dismiss()
@@ -414,19 +522,22 @@ struct MusicSearchView: View {
                     Spacer()
                 }
             }
-            .navigationTitle("Playlists")
+            .navigationTitle("Sélectionner une playlist")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Fermer") {
+                    Button("Annuler") {
                         dismiss()
                     }
-                    .font(.system(size: 20))
+                    .font(.system(size: 18))
                 }
             }
         }
         .onAppear {
             checkAuthorization()
+            if authorizationStatus == .authorized {
+                loadUserPlaylists()
+            }
         }
     }
 
@@ -441,68 +552,61 @@ struct MusicSearchView: View {
             await MainActor.run {
                 authorizationStatus = status
                 print("🎵 MusicKit authorization updated: \(status)")
+                if status == .authorized {
+                    loadUserPlaylists()
+                }
             }
         }
     }
 
-    private func searchPlaylists() {
-        guard !searchText.isEmpty else { return }
-
-        print("🔍 Searching for playlists: \(searchText)")
-        isSearching = true
+    private func loadUserPlaylists() {
+        print("🔍 Loading user's library playlists")
+        isLoading = true
         errorMessage = nil
 
         Task {
             do {
-                // Check authorization before searching
+                // Check authorization before fetching
                 let status = MusicAuthorization.currentStatus
                 print("🔍 Authorization status: \(status)")
 
                 guard status == .authorized else {
-                    print("❌ Not authorized to search: \(status)")
+                    print("❌ Not authorized to access library: \(status)")
                     await MainActor.run {
                         errorMessage = "Accès Apple Music non autorisé"
-                        isSearching = false
+                        isLoading = false
                     }
                     return
                 }
 
-                // Check for Apple Music subscription
-                let subscriptionStatus = MusicSubscription.current
-                print("🔍 Subscription status: \(subscriptionStatus)")
-
-                var request = MusicCatalogSearchRequest(term: searchText, types: [Playlist.self])
-                request.limit = 25
-
-                print("🔍 Making search request for term: '\(searchText)'")
+                // Fetch user's library playlists
+                let request = MusicLibraryRequest<Playlist>()
                 let response = try await request.response()
 
-                print("✅ Search complete: \(response.playlists.count) playlists found")
+                print("✅ Loaded \(response.items.count) playlists from library")
 
                 await MainActor.run {
-                    searchResults = response.playlists.map { $0 }
-                    isSearching = false
+                    allPlaylists = Array(response.items)
+                    isLoading = false
 
-                    if searchResults.isEmpty {
-                        print("⚠️ No results for: \(searchText)")
+                    if allPlaylists.isEmpty {
+                        print("⚠️ No playlists in user's library")
                     }
                 }
             } catch let error as NSError {
-                print("❌ Search error: \(error)")
+                print("❌ Error loading playlists: \(error)")
                 print("❌ Error domain: \(error.domain)")
                 print("❌ Error code: \(error.code)")
                 print("❌ Error userInfo: \(error.userInfo)")
                 print("❌ Error description: \(error.localizedDescription)")
 
-                var friendlyMessage = "Erreur de recherche"
+                var friendlyMessage = "Erreur de chargement"
 
                 // Provide more specific error messages
                 if error.domain == "SKErrorDomain" {
                     switch error.code {
                     case 3: // Network unavailable
                         friendlyMessage = "Pas de connexion internet"
-                    case 5: // Not entitled (no subscription)
-                        friendlyMessage = "Abonnement Apple Music requis"
                     default:
                         friendlyMessage = "Erreur Apple Music (code \(error.code))"
                     }
@@ -514,14 +618,14 @@ struct MusicSearchView: View {
 
                 await MainActor.run {
                     errorMessage = friendlyMessage
-                    isSearching = false
+                    isLoading = false
                 }
             } catch {
-                print("❌ Unknown search error: \(error)")
+                print("❌ Unknown error loading playlists: \(error)")
                 print("❌ Error type: \(type(of: error))")
                 await MainActor.run {
                     errorMessage = "Erreur inconnue: \(error.localizedDescription)"
-                    isSearching = false
+                    isLoading = false
                 }
             }
         }

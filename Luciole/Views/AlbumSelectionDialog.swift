@@ -15,6 +15,8 @@ struct AlbumSelectionDialog: View {
 
     @State private var searchText = ""
     @State private var albums: [PHAssetCollection] = []
+    @State private var isLoading = false
+    @State private var photoCounts: [String: Int] = [:]
 
     private let maxDisplayedAlbums = 10
 
@@ -59,27 +61,37 @@ struct AlbumSelectionDialog: View {
                 .padding()
 
                 // Album list
-                ScrollView {
-                    LazyVStack(spacing: 0) {
-                        if filteredAlbums.isEmpty {
-                            Text(searchText.isEmpty ? "Aucun album disponible" : "Aucun résultat")
-                                .font(.system(size: 18))
-                                .foregroundColor(.gray)
-                                .padding()
-                        } else {
-                            ForEach(filteredAlbums, id: \.localIdentifier) { album in
-                                AlbumSelectionRow(
-                                    album: album,
-                                    photoCount: photoManager.getPhotoCount(for: album),
-                                    isSelected: selectedAlbumId == album.localIdentifier
-                                ) {
-                                    selectedAlbumId = album.localIdentifier
-                                    dismiss()
-                                }
+                if isLoading {
+                    Spacer()
+                    ProgressView()
+                        .scaleEffect(1.5)
+                    Spacer()
+                } else {
+                    ScrollView {
+                        LazyVStack(spacing: 0) {
+                            if filteredAlbums.isEmpty {
+                                Text(searchText.isEmpty ? "Aucun album disponible" : "Aucun résultat")
+                                    .font(.system(size: 18))
+                                    .foregroundColor(.gray)
+                                    .padding()
+                            } else {
+                                ForEach(filteredAlbums, id: \.localIdentifier) { album in
+                                    AlbumSelectionRow(
+                                        album: album,
+                                        photoCount: photoCounts[album.localIdentifier],
+                                        isSelected: selectedAlbumId == album.localIdentifier
+                                    ) {
+                                        selectedAlbumId = album.localIdentifier
+                                        dismiss()
+                                    }
+                                    .onAppear {
+                                        loadPhotoCount(for: album)
+                                    }
 
-                                if album != filteredAlbums.last {
-                                    Divider()
-                                        .padding(.leading)
+                                    if album != filteredAlbums.last {
+                                        Divider()
+                                            .padding(.leading)
+                                    }
                                 }
                             }
                         }
@@ -98,14 +110,38 @@ struct AlbumSelectionDialog: View {
             }
         }
         .onAppear {
-            albums = photoManager.fetchAllAlbums()
+            loadAlbums()
+        }
+    }
+
+    private func loadAlbums() {
+        isLoading = true
+        Task {
+            let sortedAlbums = await photoManager.fetchAllAlbumsSorted()
+            await MainActor.run {
+                albums = sortedAlbums
+                isLoading = false
+            }
+        }
+    }
+
+    private func loadPhotoCount(for album: PHAssetCollection) {
+        // Don't reload if already cached
+        guard photoCounts[album.localIdentifier] == nil else { return }
+
+        let manager = photoManager
+        Task.detached(priority: .utility) {
+            let count = manager.getPhotoCount(for: album)
+            await MainActor.run {
+                photoCounts[album.localIdentifier] = count
+            }
         }
     }
 }
 
 struct AlbumSelectionRow: View {
     let album: PHAssetCollection
-    let photoCount: Int
+    let photoCount: Int?
     let isSelected: Bool
     let onSelect: () -> Void
 
@@ -117,9 +153,16 @@ struct AlbumSelectionRow: View {
                         .font(.system(size: 18))
                         .foregroundColor(.primary)
 
-                    Text("\(photoCount) photo\(photoCount > 1 ? "s" : "")")
-                        .font(.system(size: 14))
-                        .foregroundColor(.gray)
+                    if let count = photoCount {
+                        Text("\(count) photo\(count > 1 ? "s" : "")")
+                            .font(.system(size: 14))
+                            .foregroundColor(.gray)
+                    } else {
+                        // Show loading indicator while counting
+                        Text("...")
+                            .font(.system(size: 14))
+                            .foregroundColor(.gray)
+                    }
                 }
 
                 Spacer()

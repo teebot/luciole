@@ -110,12 +110,22 @@ class PhotoManager: ObservableObject {
             }
         }
 
-        // Sort by most recent photo date (descending)
-        return albums.sorted { album1, album2 in
-            let date1 = getLatestPhotoDate(for: album1)
-            let date2 = getLatestPhotoDate(for: album2)
-            return date1 > date2
-        }
+        // Return albums without sorting - sorting happens asynchronously in the view
+        return albums
+    }
+
+    func fetchAllAlbumsSorted() async -> [PHAssetCollection] {
+        // Fetch albums on background thread
+        return await Task.detached(priority: .userInitiated) {
+            let albums = self.fetchAllAlbums()
+
+            // Sort by most recent photo date (descending)
+            return albums.sorted { album1, album2 in
+                let date1 = self.getLatestPhotoDate(for: album1)
+                let date2 = self.getLatestPhotoDate(for: album2)
+                return date1 > date2
+            }
+        }.value
     }
 
     func getLatestPhotoDate(for album: PHAssetCollection) -> Date {

@@ -37,36 +37,62 @@ class MusicManager: ObservableObject {
     }
 
     func loadPlaylist(playlistId: String) async {
-        guard !playlistId.isEmpty else { return }
+        guard !playlistId.isEmpty else {
+            print("❌ Playlist ID is empty")
+            return
+        }
+
+        print("🎵 Loading playlist with ID: \(playlistId)")
 
         do {
-            // Fetch playlist by ID
-            var request = MusicCatalogResourceRequest<Playlist>(matching: \.id, equalTo: MusicItemID(playlistId))
-            request.properties = [.tracks]
-
+            // Fetch playlist from user's library
+            let request = MusicLibraryRequest<Playlist>()
             let response = try await request.response()
 
-            if let playlist = response.items.first {
+            print("🎵 Found \(response.items.count) playlists in library")
+
+            // Find the playlist by ID
+            if let playlist = response.items.first(where: { $0.id.rawValue == playlistId }) {
+                print("✅ Found playlist: \(playlist.name)")
+
+                // Load full tracks for the playlist
+                let detailedPlaylist = try await playlist.with([.tracks])
+
                 // Get tracks from playlist
-                if let tracks = playlist.tracks {
+                if let tracks = detailedPlaylist.tracks {
+                    let trackArray = Array(tracks)
+                    print("🎵 Playlist has \(trackArray.count) tracks")
+
+                    guard !trackArray.isEmpty else {
+                        print("⚠️ Playlist is empty")
+                        return
+                    }
+
                     // Shuffle the tracks
-                    var shuffledTracks = Array(tracks)
+                    var shuffledTracks = trackArray
                     shuffledTracks.shuffle()
 
                     // Set the queue with shuffled tracks
                     player.queue = ApplicationMusicPlayer.Queue(for: shuffledTracks)
+                    print("✅ Queue set with \(shuffledTracks.count) shuffled tracks")
 
-                    // Start playing
+                    // Start playing automatically
                     try await player.play()
+                    print("✅ Playback started")
 
                     await MainActor.run {
                         self.isPlaying = true
                         startTimer()
                     }
+                } else {
+                    print("⚠️ No tracks found in playlist")
                 }
+            } else {
+                print("❌ Playlist with ID \(playlistId) not found in library")
             }
         } catch {
-            print("Error loading playlist: \(error)")
+            print("❌ Error loading playlist: \(error)")
+            print("❌ Error type: \(type(of: error))")
         }
     }
 
