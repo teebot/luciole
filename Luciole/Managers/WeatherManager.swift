@@ -21,7 +21,11 @@ class WeatherManager: NSObject, ObservableObject {
     override init() {
         super.init()
         locationManager.delegate = self
-        checkLocationAuthorization()
+
+        // Defer authorization check to avoid blocking UI
+        DispatchQueue.main.async { [weak self] in
+            self?.checkLocationAuthorization()
+        }
     }
 
     func checkLocationAuthorization() {
@@ -32,11 +36,16 @@ class WeatherManager: NSObject, ObservableObject {
         switch status {
         case .notDetermined:
             print("📍 Requesting location authorization...")
-            locationManager.requestWhenInUseAuthorization()
+            // Request authorization asynchronously
+            DispatchQueue.main.async { [weak self] in
+                self?.locationManager.requestWhenInUseAuthorization()
+            }
         case .authorizedWhenInUse, .authorizedAlways:
             print("📍 Location authorized, starting updates...")
             locationAuthorized = true
-            locationManager.startUpdatingLocation()
+            DispatchQueue.main.async { [weak self] in
+                self?.locationManager.startUpdatingLocation()
+            }
         case .denied, .restricted:
             print("⚠️ Location access denied or restricted")
             locationAuthorized = false

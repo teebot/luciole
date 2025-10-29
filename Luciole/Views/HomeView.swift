@@ -131,24 +131,36 @@ struct HomeView: View {
     private func loadPhotoThumbnail() {
         guard !appSettings.selectedPhotoAlbumId.isEmpty else { return }
 
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.fetchLimit = 1
+        let albumId = appSettings.selectedPhotoAlbumId
 
-        if let album = PHAssetCollection.fetchAssetCollections(
-            withLocalIdentifiers: [appSettings.selectedPhotoAlbumId],
-            options: nil
-        ).firstObject {
-            let assets = PHAsset.fetchAssets(in: album, options: fetchOptions)
-            if let asset = assets.firstObject {
-                let imageManager = PHImageManager.default()
-                let targetSize = CGSize(width: 300, height: 300)
-                imageManager.requestImage(
-                    for: asset,
-                    targetSize: targetSize,
-                    contentMode: .aspectFill,
-                    options: nil
-                ) { image, _ in
-                    photoThumbnail = image
+        // Load photo thumbnail asynchronously to avoid blocking UI
+        DispatchQueue.global(qos: .userInitiated).async {
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.fetchLimit = 1
+
+            if let album = PHAssetCollection.fetchAssetCollections(
+                withLocalIdentifiers: [albumId],
+                options: nil
+            ).firstObject {
+                let assets = PHAsset.fetchAssets(in: album, options: fetchOptions)
+                if let asset = assets.firstObject {
+                    let imageManager = PHImageManager.default()
+                    let targetSize = CGSize(width: 300, height: 300)
+
+                    let options = PHImageRequestOptions()
+                    options.deliveryMode = .opportunistic
+                    options.isNetworkAccessAllowed = false // Don't wait for iCloud
+
+                    imageManager.requestImage(
+                        for: asset,
+                        targetSize: targetSize,
+                        contentMode: .aspectFill,
+                        options: options
+                    ) { [self] image, _ in
+                        DispatchQueue.main.async {
+                            self.photoThumbnail = image
+                        }
+                    }
                 }
             }
         }
