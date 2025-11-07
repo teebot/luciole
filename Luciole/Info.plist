@@ -18,5 +18,11 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Luciole needs access to your photo library to display album artwork and manage your media collection.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Luciole uses your location to enhance your music experience.</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Luciole needs access to Apple Music to play your music library and manage playlists.</string>
 </dict>
 </plist>
